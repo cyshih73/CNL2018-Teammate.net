@@ -16,7 +16,7 @@ while 1:
         for record in results:
             if round(time.time()) - round(record[1]) > 15:
                 count += 1
-                cursor.execute("DELETE FROM lineupPool WHERE uid=" + str(record[0]))
+                cursor.execute("DELETE FROM lineupPool WHERE uid='" + str(record[0]) + "'")
                 db.commit()
         db.close()
         # Print message

@@ -13,7 +13,7 @@ def pair_up(uid):
     try:
         db = sqlite3.connect("./user_gamedata.db3")
         cursor = db.cursor()
-        cursor.execute("SELECT * FROM uid2room WHERE uid=" + str(uid))
+        cursor.execute("SELECT * FROM uid2room WHERE uid='" + str(uid) + "'")
         results = cursor.fetchall()
         db.close()
     finally:
@@ -42,7 +42,7 @@ def Lineup(uid):
             try:
                 db = sqlite3.connect("./user_gamedata.db3")
                 cursor = db.cursor()
-                cursor.execute("REPLACE INTO lineupPool values (" + uid + "," + str(time.time()) + ")")
+                cursor.execute("REPLACE INTO lineupPool values ('" + uid + "'," + str(time.time()) + ")")
                 db.commit()
                 db.close()
             finally:
@@ -54,12 +54,12 @@ def Lineup(uid):
             roomcode = pair_up(uid)
             
         if roomcode != "":
-            output = "{ 'result': success, 'room': " + str(roomcode) + "}"
+            output = { 'result': 'success', 'room': str(roomcode) }
         else: 
-            output = "{ 'result': fail }"
+            output = { 'result': 'fail' }
     except:
         print("ERROR occured, please check")
-        output = "{ 'result': fail }"
+        output = { 'result': 'fail' }
 
     return jsonify(output)
 
@@ -70,17 +70,17 @@ def game_report(uid):
     try:
         db = sqlite3.connect("./user_gamedata.db3")
         cursor = db.cursor()
-        cursor.execute("INSERT INTO gameData (uid, record) values (" + uid + ",\"" + str(request.get_json(force=True)['record']) + "\")")
+        cursor.execute("INSERT INTO gameData (uid, record) values ('" + uid + "','" + str(request.get_json(force=True)['record']) + "')")
         
         # Delete user from table uid2room
-        cursor.execute("DELETE FROM uid2room WHERE uid=" + uid)
+        cursor.execute("DELETE FROM uid2room WHERE uid='" + uid + "'")
         db.commit()
         db.close()
 
-        output = "{ 'result': success }"
+        output = { 'result': 'success' }
 
     except:
-        output = "{ 'result': fail }"
+        output = { 'result': 'fail' }
         
     finally:
         dblock.release()

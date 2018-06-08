@@ -25,10 +25,10 @@ try:
     for i in range(len(results)):
         if i+1 < len(results):
             roomcode = random_pool()
-            cursor.execute("REPLACE INTO uid2room values ( " + str(results[i][0]) + ", \"" + str(roomcode) + "\")")
-            cursor.execute("REPLACE INTO uid2room values ( " + str(results[i+1][0]) + ", \"" + str(roomcode) + "\")")
-            cursor.execute("DELETE FROM lineupPool WHERE uid=" + str(results[i][0]))
-            cursor.execute("DELETE FROM lineupPool WHERE uid=" + str(results[i+1][0]))
+            cursor.execute("REPLACE INTO uid2room values ( '" + str(results[i][0]) + "', '" + str(roomcode) + "')")
+            cursor.execute("REPLACE INTO uid2room values ( '" + str(results[i+1][0]) + "', '" + str(roomcode) + "')")
+            cursor.execute("DELETE FROM lineupPool WHERE uid='" + str(results[i][0]) + "'")
+            cursor.execute("DELETE FROM lineupPool WHERE uid='" + str(results[i+1][0]) + "'")
             db.commit()
     db.close()
     
