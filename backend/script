@@ -1,0 +1,7 @@
+create table lineupPool(
+    uid TEXT primary key,
+    timestamp TIMESTAMP,
+    vkey_rate REAL,
+    attack_rate REAL,
+    length REAL
+);

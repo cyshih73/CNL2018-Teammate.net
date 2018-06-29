@@ -3,6 +3,8 @@ from filelock import Timeout, FileLock
 import subprocess
 import sqlite3
 import time
+from data import get_meta_data
+from Pairing import pairing
 
 app = Flask(__name__)
 
@@ -42,15 +44,18 @@ def Lineup(uid):
             try:
                 db = sqlite3.connect("./user_gamedata.db3")
                 cursor = db.cursor()
-                cursor.execute("REPLACE INTO lineupPool values ('" + uid + "'," + str(time.time()) + ")")
+                
+                meta_data = get_meta_data(cursor,uid)
+                cursor.execute("REPLACE INTO lineupPool values (?,?,?,?,?)", (uid, str(time.time()), *meta_data))
                 db.commit()
                 db.close()
             finally:
                 dblock.release()
 
             #TODO: Pairup algorithm
-            proc = subprocess.Popen(['python3', 'Pairing.py'], stdout=subprocess.PIPE)
-            proc.wait()
+            #proc = subprocess.Popen(['python3', 'Pairing.py'], stdout=subprocess.PIPE)
+            # proc.wait()
+            pairing(uid, meta_data)
             roomcode = pair_up(uid)
             
         if roomcode != "":
